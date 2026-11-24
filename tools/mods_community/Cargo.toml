@@ -1,0 +1,13 @@
+[package]
+name = "mods_community"
+version = "0.1.0"
+edition = "2021"
+description = "Checks the mods handed in: files that hold no code, within the limits of the README."
+publish = false
+
+[[bin]]
+name = "mods-community"
+path = "src/main.rs"
+
+[dependencies]
+serde_json = "1"

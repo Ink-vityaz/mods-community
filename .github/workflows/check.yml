@@ -1,0 +1,41 @@
+# Checks the mods a pull request brings. The pull request is data: its files are only read, by the checker of the base
+# branch, with a token that can only read and no secret. A green check is a hint for the author; the maintainer checks
+# again, with the game, before a release.
+name: check
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      # The checker and the base branch's history.
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+          persist-credentials: false
+      # What the pull request brings.
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: given
+          fetch-depth: 0
+          persist-credentials: false
+      - name: List what changes
+        working-directory: given
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          git fetch --quiet "https://github.com/${GITHUB_REPOSITORY}.git" "$BASE_SHA"
+          git diff --name-only --no-renames "${BASE_SHA}...HEAD" > ../changed.txt
+      - name: Build the checker
+        working-directory: base/tools/mods_community
+        run: cargo build --release --locked
+      - name: Check
+        run: base/tools/mods_community/target/release/mods-community check --root given --changed changed.txt

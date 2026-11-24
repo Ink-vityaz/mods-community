@@ -1,0 +1,12 @@
+{
+  "format": 1,
+  "id": "purse",
+  "name": "Ví tiền",
+  "version": "1.4.2",
+  "game": "0.29.x",
+  "depends": {},
+  "modules": [
+    "purse"
+  ],
+  "content": {}
+}

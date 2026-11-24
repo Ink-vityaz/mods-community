@@ -1,0 +1,11 @@
+{
+  "title": "Theo dõi trận",
+  "size": [210, 190],
+  "cells": [
+    {"type": "text", "text": "Đội đang đánh ở đâu"},
+    {"type": "value", "label": "Bản đồ", "bind": "run.map"},
+    {"type": "value", "label": "Ải", "bind": "run.level"},
+    {"type": "value", "label": "Quái đã hạ", "bind": "run.kills"},
+    {"type": "value", "label": "Quái / phút", "bind": "stats.kills_per_minute", "decimals": 1}
+  ]
+}

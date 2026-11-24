@@ -1,0 +1,9 @@
+{
+  "id": "runwatch",
+  "version": "1.3.2",
+  "client": {
+    "panels": [
+      "panel.json"
+    ]
+  }
+}
