@@ -1,0 +1,12 @@
+{
+  "format": 1,
+  "id": "my_panel",
+  "name": "Bảng của tôi",
+  "version": "1.0.0",
+  "game": "0.29.x",
+  "depends": {},
+  "modules": [
+    "my_panel"
+  ],
+  "content": {}
+}

@@ -39,3 +39,4 @@ jobs:
         run: cargo build --release --locked
       - name: Check
         run: base/tools/mods_community/target/release/mods-community check --root given --changed changed.txt
+# changed by a test
