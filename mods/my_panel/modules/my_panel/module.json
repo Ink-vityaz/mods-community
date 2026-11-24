@@ -1,0 +1,9 @@
+{
+  "id": "my_panel",
+  "version": "1.0.0",
+  "client": {
+    "panels": [
+      "panel.json"
+    ]
+  }
+}

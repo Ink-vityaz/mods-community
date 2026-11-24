@@ -1,0 +1,10 @@
+{
+  "title": "Bảng của tôi",
+  "size": [210, 170],
+  "cells": [
+    {"type": "text", "text": "Xin chào từ mod của bạn!"},
+    {"type": "value", "label": "Vàng", "bind": "wallet.gold"},
+    {"type": "value", "label": "Vàng / phút", "bind": "stats.gold_per_minute", "decimals": 1},
+    {"type": "bar", "label": "Túi đồ", "bind": "bag.used", "max_bind": "bag.capacity"}
+  ]
+}
