@@ -4,6 +4,7 @@ Checks every mod in `mods/` (or `--only <id>`) against the README's rules. It re
 
 ```
 cargo run --release -- check --root ../..
+cargo run --release -- pack --root ../.. --out <an empty folder>
 cargo test
 ```
 

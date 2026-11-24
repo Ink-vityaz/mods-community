@@ -38,4 +38,9 @@ jobs:
         working-directory: base/tools/mods_community
         run: cargo build --release --locked
       - name: Check
-        run: base/tools/mods_community/target/release/mods-community check --root given --changed changed.txt
+        env:
+          # A branch of this repository is a maintainer's: it may change the rules too. Everyone else brings a fork.
+          OURS: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+        run: |
+          if [ "$OURS" = true ]; then : > changed.txt; fi
+          base/tools/mods_community/target/release/mods-community check --root given --changed changed.txt --base base

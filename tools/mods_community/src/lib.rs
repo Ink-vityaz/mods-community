@@ -7,6 +7,8 @@ use std::path::{Path, PathBuf};
 
 use serde_json::Value;
 
+pub mod pack;
+
 /// The kinds of file a mod may hold.
 pub const KINDS: [&str; 5] = ["json", "png", "csv", "md", "txt"];
 /// The largest file, the largest mod (bytes) and the most files.
@@ -66,6 +68,41 @@ pub fn outside(changed: &str) -> Vec<String> {
     found
 }
 
+/// The mods of `root` that differ from the same mod of `base` without a higher version.
+pub fn not_raised(root: &Path, base: &Path) -> Vec<String> {
+    let mut found = Vec::new();
+    for entry in fs::read_dir(root.join("mods")).into_iter().flatten().flatten() {
+        let id = entry.file_name().to_string_lossy().to_string();
+        let (new, old) = (entry.path(), base.join("mods").join(&id));
+        if !old.is_dir() || contents(&new) == contents(&old) {
+            continue;
+        }
+        let (now, before) = (version_of(&new), version_of(&old));
+        if now <= before {
+            found.push(format!("mods/{id}: it changed, so \"version\" in bundle.json must be higher than it was"));
+        }
+    }
+    found.sort();
+    found
+}
+
+fn version_of(folder: &Path) -> Vec<u32> {
+    let bundle = json(folder, "bundle.json", &mut Vec::new()).unwrap_or_default();
+    bundle["version"].as_str().unwrap_or_default().split('.').map(|part| part.parse().unwrap_or(0)).collect()
+}
+
+fn contents(folder: &Path) -> Vec<(String, Vec<u8>)> {
+    files_of(folder).into_iter().map(|name| (name.clone(), fs::read(folder.join(&name)).unwrap_or_default())).collect()
+}
+
+/// The files of the mod in `folder`, as paths from it, in order.
+pub fn files_of(folder: &Path) -> Vec<String> {
+    let mut files = Vec::new();
+    walk(folder, "", &mut files, &mut Vec::new());
+    files.sort();
+    files
+}
+
 /// Whether `text` can be an id: lower case letters, digits and _, not starting with _.
 pub fn is_id(text: &str) -> bool {
     !text.is_empty() && !text.starts_with('_') && text.bytes().all(|byte| byte.is_ascii_lowercase() || byte.is_ascii_digit() || byte == b'_')
@@ -97,6 +134,13 @@ pub fn check_mod(folder: &Path, id: &str) -> Vec<String> {
     }
     if !files.iter().any(|name| name == "README.md") {
         problems.push("there is no README.md".into());
+    }
+    if let Some(listing) = json(folder, "listing.json", &mut problems) {
+        for (key, most) in [("author", 40), ("about", 160)] {
+            if !listing.get(key).and_then(Value::as_str).is_some_and(|text| !text.trim().is_empty() && text.chars().count() <= most && !text.contains('\n')) {
+                problems.push(format!("listing.json: \"{key}\" is missing, longer than {most} letters or of two lines"));
+            }
+        }
     }
     if let Some(bundle) = json(folder, "bundle.json", &mut problems) {
         check_bundle(folder, id, &bundle, &mut problems);

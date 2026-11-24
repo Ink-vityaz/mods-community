@@ -9,7 +9,9 @@ Nơi mọi người nộp mod. Mod được duyệt sẽ có trong danh sách mo
 1. Làm mod từ [mod-template](https://github.com/Ink-vityaz/mod-template), thử trong game.
 2. Fork kho này, chép thư mục mod vào `mods/<id>/`. Có thể tải lên bằng trình duyệt: **Add file**, **Upload files**.
 3. Mở pull request. Máy kiểm ngay và nói chỗ sai.
-4. Người duyệt thử trong game rồi gộp.
+4. Người duyệt thử trong game rồi gộp. Mod được đóng gói và lên danh sách ngay sau đó.
+
+Nộp thư mục file rời, không nén.
 
 Cập nhật: sửa thư mục của bạn, tăng `version` trong `bundle.json`, mở pull request mới.
 
@@ -17,7 +19,7 @@ Cập nhật: sửa thư mục của bạn, tăng `version` trong `bundle.json`,
 
 | | |
 |---|---|
-| Thư mục | `mods/<id>/`, có `bundle.json` và `README.md` (mod là gì, tác giả) |
+| Thư mục | `mods/<id>/`, có `bundle.json`, `README.md` và `listing.json`: `author` (tới 40 chữ), `about` (một dòng, tới 160 chữ) |
 | File | chỉ `json`, `png`, `csv`, `md`, `txt` |
 | Cỡ | 512 KB mỗi file, 2 MB mỗi mod, 100 file |
 | `bundle.json` | `version` ba số, `name` tới 40 chữ, `game` nói rõ bản (như `0.29.x`), `depends` trống |
